@@ -1,12 +1,9 @@
-import { IsNotEmpty, IsString, IsDateString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsDateString } from 'class-validator';
 
-export class ScheduleDto {
-    @IsOptional()
-    id?: number;
-
+export class BookScheduleDto {
     @IsNotEmpty()
     @IsString()
-    crm: string;
+    doctorId: string;
 
     @IsNotEmpty()
     @IsDateString()
