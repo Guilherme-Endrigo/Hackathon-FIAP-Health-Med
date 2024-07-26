@@ -4,6 +4,7 @@ export default (): {
         name: string;
         description: string;
         version: string;
+        JWT_SECRET: string;
     };
 } => ({
     application: {
@@ -11,5 +12,6 @@ export default (): {
         name: process.env.APPLICATION_NAME || 'Service',
         description: process.env.APPLICATION_DESCRIPTION || 'Service documentation',
         version: process.env.APPLICATION_VERSION || '1.0',
+        JWT_SECRET: 'secretjwt' // mudar pra algo mais seguro
     },
 });

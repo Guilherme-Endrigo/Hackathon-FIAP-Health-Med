@@ -23,11 +23,12 @@ import { LoginPatientUseCase } from './domain/use-cases/login-patient.use-case';
 import { LoginPatientAdapter } from './infrastructure/adapters/login-patient.adapter';
 import { SearchDoctorUseCase } from './domain/use-cases/search-doctor.use-case';
 import { DoctorAdapter } from './infrastructure/adapters/doctor.adapter';
+import ConfigsValus from "./config/config"
 
 @Module({
   imports: [
     HttpModule,
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, load: [ConfigsValus]}), // quando usar configService lembrar de carregar os valores aqui no load
     KnexModule.forRoot({
       config: {
         client: 'mysql2',
@@ -45,7 +46,7 @@ import { DoctorAdapter } from './infrastructure/adapters/doctor.adapter';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
+        secret: configService.get<string>('application.JWT_SECRET'),
         signOptions: { expiresIn: '1h' },
       }),
     }),
