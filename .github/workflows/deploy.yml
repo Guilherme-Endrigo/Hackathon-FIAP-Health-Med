@@ -49,39 +49,9 @@ jobs:
         run: |
           docker push public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}
 
-      # - name: Update ECS Task Definition
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_REGION: us-east-2
-      #     CLUSTER_NAME: clinicfiapproject
-      #     SERVICE_NAME: clinicfiapproject-service
-      #     TASK_DEFINITION_NAME: clinicfiapproject-task
-      #     CONTAINER_NAME: clinicfiapproject
-      #   run: |
-      #     aws ecs describe-task-definition --task-definition $TASK_DEFINITION_NAME --region $AWS_REGION > task-def.json
-
-      #     jq --arg IMAGE "public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}" \
-      #        '.taskDefinition.containerDefinitions[0].image = $IMAGE' \
-      #        task-def.json > task-def-updated.json
-
-      #     aws ecs register-task-definition \
-      #       --family $TASK_DEFINITION_NAME \
-      #       --execution-role-arn $(jq -r '.taskDefinition.executionRoleArn' task-def-updated.json) \
-      #       --network-mode $(jq -r '.taskDefinition.networkMode' task-def-updated.json) \
-      #       --container-definitions file://task-def-updated.json \
-      #       --requires-compatibilities $(jq -r '.taskDefinition.requiresCompatibilities[0]' task-def-updated.json) \
-      #       --cpu $(jq -r '.taskDefinition.cpu' task-def-updated.json) \
-      #       --memory $(jq -r '.taskDefinition.memory' task-def-updated.json) \
-      #       --region $AWS_REGION
-
-      #     NEW_TASK_DEFINITION_ARN=$(aws ecs describe-task-definition --task-definition $TASK_DEFINITION_NAME --region $AWS_REGION | jq -r '.taskDefinition.taskDefinitionArn')
-
-      #     aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition $NEW_TASK_DEFINITION_ARN --force-new-deployment --region $AWS_REGION
-
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition clinicfiapproject-service \
+          aws ecs describe-task-definition --task-definition clinicfiapproject-task \
           --query taskDefinition > task-definition.json
       
       - name: Fill in the new image ID in the Amazon ECS task definition
