@@ -61,7 +61,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}
+          container-name: clinicfiapproject
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
