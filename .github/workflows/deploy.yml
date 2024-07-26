@@ -21,15 +21,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Get current timestamp
+        id: timestamp
+        run: echo "TIMESTAMP=$(date +%Y%m%d-%H%M)" >> $GITHUB_ENV
+
       - name: Build Docker image
         run: |
           TIMESTAMP=$(date +%Y%m%d-%H%M)
           docker build -t clinicfiapproject .
           docker tag clinicfiapproject:latest public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}
-
-      - name: Get current timestamp
-        id: timestamp
-        run: echo "TIMESTAMP=$(date +%Y%m%d-%H%M)" >> $GITHUB_ENV
 
       - name: Log in to Amazon ECR
         env:
