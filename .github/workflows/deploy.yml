@@ -33,10 +33,12 @@ jobs:
         run: echo "TIMESTAMP=$(date +%Y%m%d-%H%M)" >> $GITHUB_ENV
 
       - name: Build Docker image
+        id: build-image
         run: |
           TIMESTAMP=$(date +%Y%m%d-%H%M)
           docker build -t clinicfiapproject .
           docker tag clinicfiapproject:latest public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}
+          echo "::set-output name=image::public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}"
 
       - name: Log in to Amazon ECR
         env:
