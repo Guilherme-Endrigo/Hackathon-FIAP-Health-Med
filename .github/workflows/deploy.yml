@@ -25,7 +25,11 @@ jobs:
         run: |
           TIMESTAMP=$(date +%Y%m%d-%H%M)
           docker build -t clinicfiapproject .
-          docker tag clinicfiapproject:latest public.ecr.aws/e9h5j2l3/clinicfiapproject:$TIMESTAMP
+          docker tag clinicfiapproject:latest public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}
+
+      - name: Get current timestamp
+        id: timestamp
+        run: echo "TIMESTAMP=$(date +%Y%m%d-%H%M)" >> $GITHUB_ENV
 
       - name: Log in to Amazon ECR
         env:
@@ -36,7 +40,7 @@ jobs:
 
       - name: Push image to Amazon ECR
         run: |
-          docker push public.ecr.aws/e9h5j2l3/clinicfiapproject:$TIMESTAMP
+          docker push public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}
 
       - name: Update ECS Task Definition
         env:
@@ -50,7 +54,7 @@ jobs:
         run: |
           aws ecs describe-task-definition --task-definition $TASK_DEFINITION_NAME --region $AWS_REGION > task-def.json
 
-          jq --arg IMAGE "public.ecr.aws/e9h5j2l3/clinicfiapproject:$TIMESTAMP" '.taskDefinition.containerDefinitions[0].image = $IMAGE' task-def.json > task-def-updated.json
+          jq --arg IMAGE "public.ecr.aws/e9h5j2l3/clinicfiapproject:${{ env.TIMESTAMP }}" '.taskDefinition.containerDefinitions[0].image = $IMAGE' task-def.json > task-def-updated.json
 
           aws ecs register-task-definition \
             --family $TASK_DEFINITION_NAME \
