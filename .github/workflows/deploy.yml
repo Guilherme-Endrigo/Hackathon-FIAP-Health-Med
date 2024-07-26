@@ -27,6 +27,9 @@ jobs:
           docker tag clinicfiapproject:latest public.ecr.aws/e9h5j2l3/clinicfiapproject:latest
 
       - name: Log in to Amazon ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/e9h5j2l3
 
@@ -35,5 +38,8 @@ jobs:
           docker push public.ecr.aws/e9h5j2l3/clinicfiapproject:latest
 
       - name: Update ECS service
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws ecs update-service --cluster clinicfiapproject --service clinicfiapproject-service --force-new-deployment
